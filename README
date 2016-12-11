@@ -1,0 +1,32 @@
+samir manafzadeh tabriz
+604675793
+
+
+include:
+
+source code for lab 4
+README
+two logs from part 1 and part 2
+
+
+this lab was written for edisont intel kit with grove tempreture sensor.
+
+part 1 is running the program for 1 in and collect temperture and write it in
+
+to file, i used mraa library to connect to tempereture and get the temp.
+
+part2 will connect to server and collect the port number that was created for
+
+each student. then will recive the commands from server and respond to it and
+
+log it into a file, the program was wrriten by multithreading.
+
+important note was that server was keep going down and program should have
+
+checked if the server is down or not , getting the right port as an integer is 
+improtant too. i need to flush this kit one time due to the os issue of my
+windows laptop.
+
+
+
+

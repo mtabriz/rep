@@ -16,15 +16,9 @@
 #include <pthread.h>
 #include <string.h>
 #include <strings.h>
-#include <termios.h>   /* To get & set Terminal attributes */
-#include <getopt.h>    /* Argument Options parse headers */
 #include <string.h>
-#include <stdlib.h>    /* Stdio function headers */
-#include <stdio.h>     /* Stdio function headers */
-#include <unistd.h>    /* FD numbers */
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h> /* for htons, and server setup */
 #include <netdb.h>
 #include <fcntl.h>
 #include <pthread.h>

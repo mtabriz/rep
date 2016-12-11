@@ -16,19 +16,11 @@
 #include <pthread.h>
 #include <string.h>
 #include <strings.h>
-#include <termios.h>   /* To get & set Terminal attributes */
-#include <getopt.h>    /* Argument Options parse headers */
 #include <string.h>
-#include <stdlib.h>    /* Stdio function headers */
-#include <stdio.h>     /* Stdio function headers */
-#include <unistd.h>    /* FD numbers */
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h> /* for htons, and server setup */
 #include <netdb.h>
 #include <fcntl.h>
 #include <pthread.h>
-
+#include <signal.h>
 
 float adc_value = 0.0;
 const int B=4255;
@@ -61,8 +53,9 @@ float read_temp(int flag,int freq){
 	float temperature = 1.0/(log(R/100000.0)/B+1/298.15)-273.15;
 	if(flag){
 		temperature = temperature * (18/10)+32;
-		printf("%s %0.1f F\n",buffer,temperature);
-		fprintf(file, "%s %0.1f F\n", buffer, temperature);
+		printf("%s %0.1f\n",buffer,temperature);
+		
+		fprintf(file,"%s %0.1f\n",buffer, temperature);		
 		
 	}
 	else{
@@ -122,86 +115,23 @@ void *CDM(void* i){
 	}
 }
 
+
+void signal_hand(int sig){
+if (sig == SIGINT)
+	    printf("received SIGINT\n");
+	close(file);
+	exit(0);
+}
+
 int main(int argc, char *argv[]){
+	signal(SIGINT,signal_hand);
+	file = fopen("log-part1.txt", "w");
 
-	//create socket
-	int port_num = 16000;
-
-	sock_fd = socket(PF_INET, SOCK_STREAM, 0);
-	if(sock_fd < 0){
-		error("error");
+	while(1){		
+		read_temp(1,1);
 	}
-	// end socket
-	// create connection
-	struct sockaddr_in server_addr;
-	struct sockaddr_in client_addr;
-	struct hostent* server;
-
-	bzero((char*)&server_addr,sizeof(server_addr));
-
-	server = gethostbyname("lever.cs.ucla.edu");
-
-	server_addr.sin_family = AF_INET;
-
-	bcopy((char *)server->h_addr, (char *)&server_addr.sin_addr.s_addr,server->h_length);
-	if (server == NULL) {
-		fprintf(stderr,"ERROR, no such host\n");
-		exit(0);
-	};
-
-	server_addr.sin_port = htons(port_num);
-	if (connect(sock_fd, (struct sockaddr *) &server_addr,sizeof(server_addr)) < 0) {
-		perror("Error connecting"); 
-		exit(0);
-	}
-	// connection done
-	// get new port
-	massage = "Port request 604675793";
-	char resp[1024];
-	//int count = send(sock_fd,massage,strlen(massage),0);
-	//count = recv(sock_fd,resp,1024,0);
-	write(sock_fd,massage,strlen(massage));
-	read(sock_fd,&massage_int,8);
-
-	close(sock_fd);
-
-	sock_fd = socket(PF_INET,SOCK_STREAM,0);
-	//int newPort = atoi(massage);
-
-	server_addr.sin_port=htons(massage_int);
-	printf("port number %d\n", (int)(massage_int));
-	// finish new port
-	//
-	
-	if (connect(sock_fd, (struct sockaddr *) &server_addr,sizeof(server_addr)) < 0) {
-		perror("Error connecting new port"); 
-		exit(0);
-	}
-
-	
-	pthread_create(&thread_id, NULL, CDM, NULL);
-
-	file = fopen("log-part2.txt", "w");
-
-	while(1){
-		float result;
-		if (flag_f && start_flag){
-		result = read_temp(1,frq);
-		}
-		else if (!flag_f && start_flag){
-		result = read_temp(0,frq);
-		}
-		else{
-		continue;
-		}
-
-		char temp[30];
-		sprintf(temp,"604675793 TEMP=%.1f\n",result);		
-		if(send(sock_fd,&temp,sizeof(temp),0)<0){
-		      printf("error sending result");
-		}
-	}
-
+		
+	close(file);
 	return 0;  
 }
 

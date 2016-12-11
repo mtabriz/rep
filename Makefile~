@@ -1,2 +1,9 @@
 build:
-	gcc -lmraa -lm -g -lpthread -std=c99 -o lab4 lab4.c
+	gcc -lmraa -lm -w -g -lpthread -std=c99 -o lab4_part1 lab4_part1.c
+	gcc -lmraa -lm -w -g -lpthread -std=c99 -o lab4_part2 lab4_part2.c
+clean:
+	rm lab4_part1
+	rm lab4_part2
+	rm lab4*.txt
+dist:
+	tar -cvzf lab4-604675793 README Makefile lab4*.c lab4*.txt 
