@@ -4,6 +4,6 @@ build:
 clean:
 	rm lab4_part1
 	rm lab4_part2
-	rm lab4*.txt
+	rm log*.txt
 dist:
-	tar -cvzf lab4-604675793 README Makefile lab4*.c lab4*.txt 
+	tar -cvzf lab4-604675793 README Makefile lab4*.c log*.txt 

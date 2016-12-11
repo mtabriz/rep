@@ -6,4 +6,4 @@ clean:
 	rm lab4_part2
 	rm log*.txt
 dist:
-	tar -cvzf lab4-604675793 README Makefile lab4*.c log*.txt 
+	tar -cvzf lab4-604675793.tar.gz README Makefile lab4*.c log*.txt 
